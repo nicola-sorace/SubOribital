@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=4]
+code = "shader_type spatial;
+render_mode unshaded, cull_front;
+
+void fragment() {
+    ALBEDO = vec3(0.0, 0.1, 1.0);
+	ALPHA = max(dot(NORMAL, vec3(0.0, 0.0, 1.0)), 0.0) * 0.1;
+}"
+
+[resource]
+shader = SubResource( 4 )

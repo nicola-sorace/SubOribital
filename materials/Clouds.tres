@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[ext_resource path="res://textures/planets/earth_clouds.jpg" type="Texture" id=1]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type spatial;
+
+uniform sampler2D clouds;
+
+void fragment() {
+    ALBEDO = vec3(1.0, 1.0, 1.0);
+	ALPHA = texture(clouds, UV).r;
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/clouds = ExtResource( 1 )
