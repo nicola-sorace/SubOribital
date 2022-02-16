@@ -46,17 +46,20 @@ class Space: Spatial() {
 
 	@RegisterFunction
 	override fun _physicsProcess(delta: Double) {
+		// Will store the net force on each celestial body
 		val forces = celestialBodies.map { Vector3.ZERO }.toMutableList()
 
 		// Newtonian gravity
 		celestialBodies.forEachIndexed { i, a ->
-			celestialBodies.filter { it != a }.forEach { b ->
+			(i+1 until celestialBodies.count()).forEach { j ->
+				val b = celestialBodies[j]
 				val aToB = b.position - a.position
 				val r = aToB.length()
-				forces[i] += aToB.normalized() * (
-					//TODO Force is equal and opposite - don't calculate it twice
+				val forceVector = aToB.normalized() * (
 					gravitationalConstant * a.mass * b.mass / r.pow(2)
 				)
+				forces[i] += forceVector
+				forces[j] -= forceVector
 			}
 		}
 
