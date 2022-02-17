@@ -49,17 +49,28 @@ class Space: Spatial() {
 		// Will store the net force on each celestial body
 		val forces = celestialBodies.map { Vector3.ZERO }.toMutableList()
 
-		// Newtonian gravity
+		// Body interaction
 		celestialBodies.forEachIndexed { i, a ->
 			(i+1 until celestialBodies.count()).forEach { j ->
 				val b = celestialBodies[j]
 				val aToB = b.position - a.position
 				val r = aToB.length()
-				val forceVector = aToB.normalized() * (
-					gravitationalConstant * a.mass * b.mass / r.pow(2)
-				)
-				forces[i] += forceVector
-				forces[j] -= forceVector
+				val n = aToB.normalized()
+
+				val overlap = (a.radius + b.radius) - r
+				if(overlap > 0) {
+					// Perfectly inelastic collision
+					val mergedVelocity = ((a.velocity * a.mass) + (b.velocity * b.mass)) / (a.mass + b.mass)
+					a.velocity = mergedVelocity
+					b.velocity = mergedVelocity
+				} else {
+					// Newtonian gravity
+					val forceVector = n * (
+						gravitationalConstant * a.mass * b.mass / r.pow(2)
+					)
+					forces[i] += forceVector
+					forces[j] -= forceVector
+				}
 			}
 		}
 
