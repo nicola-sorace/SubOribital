@@ -82,6 +82,11 @@ class Space: Spatial() {
 		// Apply velocities
 		celestialBodies.onEach {
 			it.position += timeScale * delta * it.velocity
+			if(it.angularVelocity.length() > 0.0) {
+				it.rotate(
+					it.angularVelocity.normalized().toGodot(), timeScale * delta * it.angularVelocity.length()
+				)
+			}
 		}
 	}
 

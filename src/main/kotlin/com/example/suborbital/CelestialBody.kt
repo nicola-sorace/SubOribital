@@ -6,6 +6,7 @@ import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.global.GD
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 /*
@@ -23,11 +24,13 @@ class CelestialBody : Spatial {
 	var radiusString = "0.0"
 
 	var mass = 0.0
+	var angularMass = 0.0 // AKA moment of inertia
 	var radius = 0.0
 
 	var space: Space? = null
 	var position = Vector3.ZERO
 	var velocity = Vector3.ZERO
+	var angularVelocity = Vector3.ZERO
 
 	constructor() {
 		mass = massString.toDouble()
@@ -38,12 +41,14 @@ class CelestialBody : Spatial {
 		mass: Double,
 		radius: Double,
 		space: Space?,
+		angularMass: Double?,
 	) {
 		this.mass = mass
 		this.radius = radius
 		this.space = space?.apply {
 			addBody(this@CelestialBody)
 		}
+		this.angularMass = angularMass ?: (2/5 * mass * radius.pow(2))
 	}
 
 	fun setScale(scale: Double) {
