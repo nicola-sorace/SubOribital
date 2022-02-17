@@ -26,6 +26,7 @@ class CelestialBody : Spatial {
 	var mass = 0.0
 	var angularMass = 0.0 // AKA moment of inertia
 	var radius = 0.0
+	var solid = true
 
 	var space: Space? = null
 	var position = Vector3.ZERO
@@ -41,14 +42,16 @@ class CelestialBody : Spatial {
 		mass: Double,
 		radius: Double,
 		space: Space?,
-		angularMass: Double?,
+		angularMass: Double = 2/5 * mass * radius.pow(2),
+		solid: Boolean = true,
 	) {
 		this.mass = mass
 		this.radius = radius
 		this.space = space?.apply {
 			addBody(this@CelestialBody)
 		}
-		this.angularMass = angularMass ?: (2/5 * mass * radius.pow(2))
+		this.angularMass = angularMass
+		this.solid = solid
 	}
 
 	fun setScale(scale: Double) {

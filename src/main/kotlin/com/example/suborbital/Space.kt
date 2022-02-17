@@ -54,11 +54,11 @@ class Space: Spatial() {
 			(i+1 until celestialBodies.count()).forEach { j ->
 				val b = celestialBodies[j]
 				val aToB = b.position - a.position
-				val r = aToB.length()
-				val n = aToB.normalized()
+				val r = aToB.length
+				val n = aToB.normalized
 
 				val overlap = (a.radius + b.radius) - r
-				if(overlap > 0) {
+				if(overlap > 0 && a.solid && b.solid) {
 					// Perfectly inelastic collision
 					val mergedVelocity = ((a.velocity * a.mass) + (b.velocity * b.mass)) / (a.mass + b.mass)
 					a.velocity = mergedVelocity
@@ -82,9 +82,9 @@ class Space: Spatial() {
 		// Apply velocities
 		celestialBodies.onEach {
 			it.position += timeScale * delta * it.velocity
-			if(it.angularVelocity.length() > 0.0) {
+			if(it.angularVelocity.length > 0.0) {
 				it.rotate(
-					it.angularVelocity.normalized().toGodot(), timeScale * delta * it.angularVelocity.length()
+					it.angularVelocity.normalized.toGodot(), timeScale * delta * it.angularVelocity.length
 				)
 			}
 		}

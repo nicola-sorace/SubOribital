@@ -23,9 +23,10 @@ data class Vector3(var x: Double, var y: Double, var z: Double) {
     operator fun times(s: Double) = Vector3(x * s, y * s, z * s)
     operator fun div(s: Double) = Vector3(x / s, y / s, z / s)
 
-    fun length() = sqrt(x.pow(2) + y.pow(2) + z.pow(2))
-    fun normalized() = this / length()
     fun dot(v: Vector3) = x * v.x + y * v.y + z * v.z
+
+    val length by lazy { sqrt(x.pow(2) + y.pow(2) + z.pow(2)) }
+    val normalized by lazy { this / length }
 }
 
 fun godot.core.Vector3.toKotlin() = Vector3(x, y, z)
