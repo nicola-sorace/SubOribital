@@ -47,7 +47,7 @@ class Space: Spatial() {
 	@RegisterFunction
 	override fun _physicsProcess(delta: Double) {
 		// Will store the net force on each celestial body
-		val forces = celestialBodies.map { Vector3.ZERO }.toMutableList()
+		val forces = celestialBodies.associateWith { Vector3.ZERO }.toMutableMap()
 
 		// Body interaction
 		celestialBodies.forEachIndexed { i, a ->
@@ -68,15 +68,15 @@ class Space: Spatial() {
 					val forceVector = n * (
 						gravitationalConstant * a.mass * b.mass / r.pow(2)
 					)
-					forces[i] += forceVector
-					forces[j] -= forceVector
+					forces[a] = forces[a]!! + forceVector
+					forces[b] = forces[b]!! - forceVector
 				}
 			}
 		}
 
 		// Apply forces as acceleration
-		celestialBodies.onEachIndexed { i, it ->
-			it.velocity += timeScale * delta * forces[i] / it.mass
+		celestialBodies.onEach { body ->
+			body.velocity += timeScale * delta * forces[body]!! / body.mass
 		}
 
 		// Apply velocities
@@ -104,15 +104,5 @@ class Space: Spatial() {
 			position = Vector3(radius, 0.0, 0.0)
 			velocity = Vector3(0.0, 0.0, earth.getCircularOrbitVelocity(radius))
 		})
-
-//		spaceScale = 0.03 / earth.radius
-//		timeScale = 50000.0
-//		val orbitRadius = 3.48e8
-//		val orbitVelocity = 1.022e3
-//		addBody(earth)
-//		addBody(moon.apply {
-//			position = Vector3(orbitRadius, 0.0, 0.0)
-//			velocity = Vector3(0.0, orbitVelocity, 0.0)
-//		})
 	}
 }
