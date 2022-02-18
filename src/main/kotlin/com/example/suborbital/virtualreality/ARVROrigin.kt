@@ -1,14 +1,11 @@
-package com.example.suborbital.ARVR
+package com.example.suborbital.virtualreality
 
 import godot.ARVRCamera
 import godot.ARVROrigin
 import godot.ARVRServer
-import godot.Skeleton
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.core.Dictionary
-import godot.core.Vector2
-import godot.core.Vector3
 import godot.extensions.getNodeAs
 import godot.global.GD
 

@@ -1,13 +1,12 @@
-package com.example.suborbital
+package com.example.suborbital.physics
 
+import com.example.suborbital.Vector3
 import godot.Spatial
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
-import godot.global.GD
 import kotlin.math.pow
-import kotlin.math.sqrt
 
 /*
 Any object with mass and some form of radius.
@@ -62,7 +61,4 @@ class CelestialBody : Spatial {
 	override fun _process(delta: Double) {
 		translation = (position * (space?.spaceScale ?: 1.0)).toGodot()
 	}
-
-	fun getCircularOrbitVelocity(r: Double) =
-		sqrt(space?.gravitationalConstant!! * mass / r)
 }

@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://src/main/kotlin/com/example/suborbital/CelestialBody.kt" type="Script" id=1]
+[ext_resource path="res://src/main/kotlin/com/example/suborbital/physics/CelestialBody.kt" type="Script" id=1]
 [ext_resource path="res://textures/planets/earth.jpg" type="Texture" id=2]
 [ext_resource path="res://materials/Atmosphere.tres" type="Material" id=3]
 [ext_resource path="res://materials/Clouds.tres" type="Material" id=4]

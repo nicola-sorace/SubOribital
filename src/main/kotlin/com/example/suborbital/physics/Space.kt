@@ -1,5 +1,7 @@
-package com.example.suborbital
+package com.example.suborbital.physics
 
+import com.example.suborbital.Vector3
+import com.example.suborbital.times
 import godot.PackedScene
 import godot.Spatial
 import godot.annotation.RegisterClass
@@ -11,7 +13,7 @@ import kotlin.properties.Delegates
 @RegisterClass
 class Space: Spatial() {
 	// Universal gravitational constant
-	val gravitationalConstant = 6.674e-11
+	val gravitationalField = GravitationalField()
 
 	private var celestialBodies: MutableList<CelestialBody> = mutableListOf()
 
@@ -49,30 +51,8 @@ class Space: Spatial() {
 		// Will store the net force on each celestial body
 		val forces = celestialBodies.associateWith { Vector3.ZERO }.toMutableMap()
 
-		// Body interaction
-		celestialBodies.forEachIndexed { i, a ->
-			(i+1 until celestialBodies.count()).forEach { j ->
-				val b = celestialBodies[j]
-				val aToB = b.position - a.position
-				val r = aToB.length
-				val n = aToB.normalized
-
-				val overlap = (a.radius + b.radius) - r
-				if(overlap > 0 && a.solid && b.solid) {
-					// Perfectly inelastic collision
-					val mergedVelocity = ((a.velocity * a.mass) + (b.velocity * b.mass)) / (a.mass + b.mass)
-					a.velocity = mergedVelocity
-					b.velocity = mergedVelocity
-				} else {
-					// Newtonian gravity
-					val forceVector = n * (
-						gravitationalConstant * a.mass * b.mass / r.pow(2)
-					)
-					forces[a] = forces[a]!! + forceVector
-					forces[b] = forces[b]!! - forceVector
-				}
-			}
-		}
+		// Add forces
+		gravitationalField.applyTo(forces)
 
 		// Apply forces as acceleration
 		celestialBodies.onEach { body ->
@@ -95,14 +75,25 @@ class Space: Spatial() {
 		//TODO Either fix exported values not coming through or remove them
 		val earth = loadCelestialBody("Earth", 5.972e24, 6.371e6)
 		val moon = loadCelestialBody("Moon", 7.34767309e22, 1.7374e6)
+		val moon2 = loadCelestialBody("Moon", 7.34767309e22, 1.7374e6)
 
-		spaceScale = 0.5 / earth.radius
-		timeScale = 1000.0
-		addBody(earth)
-		addBody(moon.apply {
-			val radius = earth.radius * 2
-			position = Vector3(radius, 0.0, 0.0)
-			velocity = Vector3(0.0, 0.0, earth.getCircularOrbitVelocity(radius))
-		})
+		with(gravitationalField) {
+			spaceScale = 0.2 / earth.radius
+			timeScale = 2000.0
+			addBody(earth.apply {
+				angularVelocity = Vector3(0.0, 7.2921150e-5, 0.0)
+			})
+			addBody(moon.apply {
+				val radius = earth.radius * 4
+				position = Vector3(radius, 0.0, 0.0)
+				velocity = Vector3(0.0, earth.getCircularOrbitVelocity(radius), 0.0)
+			})
+
+			addBody(moon2.apply {
+				val radius = earth.radius * 4
+				position = Vector3(0.0, radius, 0.0)
+				velocity = Vector3(0.0, earth.getCircularOrbitVelocity(radius) / 1.5, 0.0)
+			})
+		}
 	}
 }

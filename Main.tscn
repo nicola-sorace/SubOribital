@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://src/main/kotlin/com/example/suborbital/Space.kt" type="Script" id=1]
+[ext_resource path="res://src/main/kotlin/com/example/suborbital/physics/Space.kt" type="Script" id=1]
 [ext_resource path="res://textures/starmap_2020_8k.exr" type="Texture" id=2]
-[ext_resource path="res://src/main/kotlin/com/example/suborbital/ARVR/ARVROrigin.kt" type="Script" id=3]
+[ext_resource path="res://src/main/kotlin/com/example/suborbital/virtualreality/ARVROrigin.kt" type="Script" id=3]
 
 [sub_resource type="PanoramaSky" id=2]
 panorama = ExtResource( 2 )
