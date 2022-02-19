@@ -20,4 +20,7 @@ mesh = SubResource( 5 )
 material/0 = SubResource( 4 )
 
 [node name="RayCast" type="RayCast" parent="."]
+enabled = true
 cast_to = Vector3( 0, 0, -100 )
+collide_with_areas = true
+collide_with_bodies = false

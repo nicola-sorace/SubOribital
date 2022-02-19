@@ -86,7 +86,7 @@ class Space: Spatial() {
 
 		with(gravitationalField) {
 			spaceScale = 0.2 / earth.radius
-			timeScale = 700.0
+			timeScale = 2000.0
 			addBody(earth.apply {
 				angularVelocity = Vector3(0.0, 7.2921150e-5, 0.0)
 			})
