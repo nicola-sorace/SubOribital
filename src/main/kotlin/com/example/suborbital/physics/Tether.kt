@@ -37,19 +37,20 @@ class Tether(
 		forces[body] = forces[body]!! + v.normalized * stiffness * (v.length - restLength)
 
 		// Adjust visual
-		val l = v.length * spaceScale
+		val length = v.length * spaceScale
+		val tensionLevel = (v.length / restLength).coerceIn(0.0, 2.0) - 1.0
 		tetherVisual.apply {
 			translation = point.toGodot() * spaceScale
 			lookAt((body.position * spaceScale).toGodot(), godot.core.Vector3.UP)
 		}
 		meshInstance.apply {
-			translation = godot.core.Vector3(0.0, 0.0, -l/2)
+			translation = godot.core.Vector3(0.0, 0.0, -length/2)
 		}
 		capsuleMesh.apply {
-			midHeight = l
+			midHeight = length
+			radius = 0.01 - 0.009 * tensionLevel
 		}
 		material.apply {
-			val tensionLevel = (v.length / restLength).coerceIn(0.0, 2.0) - 1.0
 			albedoColor = Color(
 				1.0 - tensionLevel.coerceAtLeast(0.0),
 				1.0 + tensionLevel.coerceAtMost(0.0),

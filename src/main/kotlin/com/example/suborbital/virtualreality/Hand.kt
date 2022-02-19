@@ -4,6 +4,7 @@ import com.example.suborbital.physics.CelestialBody
 import com.example.suborbital.physics.Tether
 import com.example.suborbital.toKotlin
 import godot.ARVRController
+import godot.MeshInstance
 import godot.RayCast
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -15,6 +16,7 @@ class Hand : ARVRController() {
 	var tether: Tether? = null
 
 	val rayCast by lazy { getNodeAs<RayCast>("RayCast")!! }
+	val aimLine by lazy { getNodeAs<MeshInstance>("AimLine")!! }
 
 	var selectedBody: CelestialBody? by observable(null) { property, oldBody, newBody ->
 		if(oldBody != newBody) {
@@ -28,10 +30,12 @@ class Hand : ARVRController() {
 	@RegisterFunction
 	override fun _physicsProcess(delta: Double) {
 		val trigger = getJoystickAxis(2L) > 0.5
+		aimLine.visible = trigger && tether == null
 
 		if(tether == null) {
-			if(trigger) {
-				selectedBody?.run {
+			selectedBody = (rayCast.getCollider() as? CelestialBody)
+			if (trigger) {
+				selectedBody?.apply {
 					tether = Tether(
 						getPosition(this.space?.spaceScale ?: 1.0),
 						this,
@@ -39,8 +43,6 @@ class Hand : ARVRController() {
 					)
 					selectedBody = null
 				}
-			} else {
-				selectedBody = (rayCast.getCollider() as? CelestialBody)
 			}
 		} else {
 			if(!trigger) {
