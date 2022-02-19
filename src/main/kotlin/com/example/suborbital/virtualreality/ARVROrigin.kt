@@ -22,17 +22,18 @@ fun listAvailableInterfaces() {
 @RegisterClass
 class ARVROrigin : ARVROrigin() {
 	val camera by lazy { getNodeAs<ARVRCamera>("ARVRCamera")!! }
-//	val leftController by lazy { getNodeAs<ARVRController>("LeftController")!! }
-//	val rightController by lazy { getNodeAs<ARVRController>("RightController")!! }
+	val leftHand by lazy { getNodeAs<Hand>("LeftHand")!! }
+	val rightHand by lazy { getNodeAs<Hand>("RightHand")!! }
+	val hands by lazy { listOf(leftHand, rightHand) }
 	val movementSpeed = 2.0
 
 	@RegisterFunction
 	override fun _ready() {
-//		val arvrInterface = ARVRServer.findInterface("OpenXR")
-//
-//		if(arvrInterface?.initialize() == true) {
-//			getViewport()!!.arvr = true
-//		}
+		val arvrInterface = ARVRServer.findInterface("OpenXR")
+
+		if(arvrInterface?.initialize() == true) {
+			getViewport()!!.arvr = true
+		}
 	}
 
 //	@RegisterFunction

@@ -2,20 +2,23 @@ package com.example.suborbital.physics
 
 import com.example.suborbital.Vector3
 import com.example.suborbital.times
+import com.example.suborbital.virtualreality.ARVROrigin
 import godot.PackedScene
 import godot.Spatial
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
+import godot.extensions.getNodeAs
 import godot.global.GD
-import kotlin.math.pow
 import kotlin.properties.Delegates
 
 @RegisterClass
 class Space: Spatial() {
 	// Universal gravitational constant
 	val gravitationalField = GravitationalField()
+	var celestialBodies: MutableList<CelestialBody> = mutableListOf()
 
-	private var celestialBodies: MutableList<CelestialBody> = mutableListOf()
+	val origin by lazy { getNodeAs<ARVROrigin>("ARVROrigin")!! }
+	val hands by lazy { origin.hands }
 
 	// Scale factor expressed as the displayed length of a real meter
 	var spaceScale by Delegates.observable(1.0) { property, oldScale, newScale ->
@@ -53,6 +56,9 @@ class Space: Spatial() {
 
 		// Add forces
 		gravitationalField.applyTo(forces)
+		hands.forEach {
+			it.tether?.applyTo(forces)
+		}
 
 		// Apply forces as acceleration
 		celestialBodies.onEach { body ->
@@ -76,21 +82,20 @@ class Space: Spatial() {
 		val earth = loadCelestialBody("Earth", 5.972e24, 6.371e6)
 		val moon = loadCelestialBody("Moon", 7.34767309e22, 1.7374e6)
 		val moon2 = loadCelestialBody("Moon", 7.34767309e22, 1.7374e6)
+		val radius = earth.radius * 4
 
 		with(gravitationalField) {
 			spaceScale = 0.2 / earth.radius
-			timeScale = 2000.0
+			timeScale = 700.0
 			addBody(earth.apply {
 				angularVelocity = Vector3(0.0, 7.2921150e-5, 0.0)
 			})
 			addBody(moon.apply {
-				val radius = earth.radius * 4
 				position = Vector3(radius, 0.0, 0.0)
 				velocity = Vector3(0.0, earth.getCircularOrbitVelocity(radius), 0.0)
+				name = "Moon"
 			})
-
 			addBody(moon2.apply {
-				val radius = earth.radius * 4
 				position = Vector3(0.0, radius, 0.0)
 				velocity = Vector3(0.0, earth.getCircularOrbitVelocity(radius) / 1.5, 0.0)
 			})

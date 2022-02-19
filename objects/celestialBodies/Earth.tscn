@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/main/kotlin/com/example/suborbital/physics/CelestialBody.kt" type="Script" id=1]
 [ext_resource path="res://textures/planets/earth.jpg" type="Texture" id=2]
@@ -18,7 +18,9 @@ height = 2.02
 radius = 1.2
 height = 2.4
 
-[node name="Earth" type="Spatial"]
+[sub_resource type="SphereShape" id=5]
+
+[node name="Earth" type="Area"]
 script = ExtResource( 1 )
 radius_string = "6.371e6"
 mass_string = "5.972e24"
@@ -34,3 +36,6 @@ material/0 = ExtResource( 4 )
 [node name="Atmosphere" type="MeshInstance" parent="."]
 mesh = SubResource( 3 )
 material/0 = ExtResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 5 )

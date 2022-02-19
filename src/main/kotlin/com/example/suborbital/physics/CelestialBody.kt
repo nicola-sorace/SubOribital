@@ -1,7 +1,7 @@
 package com.example.suborbital.physics
 
 import com.example.suborbital.Vector3
-import godot.Spatial
+import godot.Area
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
@@ -14,7 +14,7 @@ The Spatial object that this script is applied to should have a radius of 1. Thi
 real radius and the space's scale factor.
  */
 @RegisterClass
-class CelestialBody : Spatial {
+class CelestialBody : Area {
 	@Export
 	@RegisterProperty
 	var massString = "0.0"
