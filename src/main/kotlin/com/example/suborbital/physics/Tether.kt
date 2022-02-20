@@ -5,6 +5,8 @@ import godot.*
 import godot.core.Color
 import godot.extensions.getNodeAs
 import godot.global.GD
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
 class Tether(
 	var point: Vector3,
@@ -23,7 +25,6 @@ class Tether(
 				body.space?.addChild(this)
 			}
 	}
-
 	val meshInstance by lazy {
 		tetherVisual.getNodeAs<MeshInstance>("MeshInstance")!!
 			.apply {
@@ -33,6 +34,8 @@ class Tether(
 	}
 	val capsuleMesh by lazy { meshInstance.mesh as CapsuleMesh }
 	val material by lazy { meshInstance.getSurfaceMaterial(0) as SpatialMaterial }
+
+	val creaking by lazy { tetherVisual.getNodeAs<AudioStreamPlayer3D>("Creaking")!! }
 
 	override fun applyTo(forces: Forces, delta: Double) {
 		val line = point - body.position
@@ -65,6 +68,18 @@ class Tether(
 				0.0,
 				0.5
 			)
+		}
+
+		// Sound effects
+		val speedFactor = (expansionVelocity.absoluteValue / 25e6).coerceAtMost(1.0)
+		if(speedFactor > 0.05) {
+			if(!creaking.playing) {
+				creaking.play(Random.nextDouble(0.0, creaking.stream!!.getLength()))
+			}
+			creaking.unitDb = -100.0 + 100.0 * speedFactor
+			creaking.pitchScale = 1.0 + tensionLevel * 0.5
+		} else if(creaking.playing) {
+			creaking.stop()
 		}
 	}
 }

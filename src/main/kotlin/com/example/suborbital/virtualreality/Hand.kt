@@ -4,11 +4,13 @@ import com.example.suborbital.physics.CelestialBody
 import com.example.suborbital.physics.Tether
 import com.example.suborbital.toKotlin
 import godot.ARVRController
+import godot.AudioStreamPlayer3D
 import godot.MeshInstance
 import godot.RayCast
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.extensions.getNodeAs
+import godot.global.GD
 import kotlin.properties.Delegates.observable
 
 @RegisterClass
