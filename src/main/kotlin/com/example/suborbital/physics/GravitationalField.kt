@@ -6,7 +6,7 @@ import kotlin.math.sqrt
 class GravitationalField : ForceField {
     val gravitationalConstant = 6.674e-11
 
-    override fun applyTo(forces: Forces) {
+    override fun applyTo(forces: Forces, delta: Double) {
 		forces.keys.toList().getPairs().forEach { (a, b) ->
 			val aToB = b.position - a.position
 			val r = aToB.length

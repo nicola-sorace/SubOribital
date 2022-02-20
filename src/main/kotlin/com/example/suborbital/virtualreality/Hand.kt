@@ -39,7 +39,8 @@ class Hand : ARVRController() {
 					tether = Tether(
 						getPosition(this.space?.spaceScale ?: 1.0),
 						this,
-						1e17
+						1e17,
+						1e16
 					)
 					selectedBody = null
 				}

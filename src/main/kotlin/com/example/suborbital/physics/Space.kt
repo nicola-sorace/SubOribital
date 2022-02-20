@@ -55,9 +55,9 @@ class Space: Spatial() {
 		val forces = celestialBodies.associateWith { Vector3.ZERO }.toMutableMap()
 
 		// Add forces
-		gravitationalField.applyTo(forces)
+		gravitationalField.applyTo(forces, delta)
 		hands.forEach {
-			it.tether?.applyTo(forces)
+			it.tether?.applyTo(forces, delta)
 		}
 
 		// Apply forces as acceleration

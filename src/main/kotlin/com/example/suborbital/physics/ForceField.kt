@@ -5,7 +5,7 @@ import com.example.suborbital.Vector3
 typealias Forces = MutableMap<CelestialBody, Vector3>
 
 interface ForceField {
-    fun applyTo(forces: Forces)
+    fun applyTo(forces: Forces, delta: Double)
 }
 
 fun List<CelestialBody>.getPairs() =

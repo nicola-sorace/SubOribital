@@ -10,9 +10,11 @@ class Tether(
 	var point: Vector3,
 	val body: CelestialBody,
 	val stiffness: Double, // Newtons per meter
+	val damping: Double, // Newtons per meter per second
 ) : Spatial(), ForceField {
 	val spaceScale get() = body.space?.spaceScale ?: 1.0
 	val restLength = (point - body.position).length
+	var oldExpansion = 0.0
 
 	val tetherVisual by lazy {
 		(GD.load<PackedScene>("res://objects/Tether.tscn")!!.instance() as Spatial)
@@ -32,13 +34,19 @@ class Tether(
 	val capsuleMesh by lazy { meshInstance.mesh as CapsuleMesh }
 	val material by lazy { meshInstance.getSurfaceMaterial(0) as SpatialMaterial }
 
-	override fun applyTo(forces: Forces) {
-		val v = point - body.position
-		forces[body] = forces[body]!! + v.normalized * stiffness * (v.length - restLength)
+	override fun applyTo(forces: Forces, delta: Double) {
+		val line = point - body.position
+		val expansion = line.length - restLength
+		val expansionVelocity = (expansion - oldExpansion) / delta
+		val force = line.normalized * (
+			stiffness * expansion + damping * expansionVelocity
+		)
+		forces[body] = forces[body]!! + force
+		oldExpansion = expansion
 
 		// Adjust visual
-		val length = v.length * spaceScale
-		val tensionLevel = (v.length / restLength).coerceIn(0.0, 2.0) - 1.0
+		val length = line.length * spaceScale
+		val tensionLevel = (line.length / restLength).coerceIn(0.0, 2.0) - 1.0
 		tetherVisual.apply {
 			translation = point.toGodot() * spaceScale
 			lookAt((body.position * spaceScale).toGodot(), godot.core.Vector3.UP)
