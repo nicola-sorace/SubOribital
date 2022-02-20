@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/main/kotlin/com/example/suborbital/physics/CelestialBody.kt" type="Script" id=1]
 [ext_resource path="res://textures/planets/earth.jpg" type="Texture" id=2]
 [ext_resource path="res://materials/Atmosphere.tres" type="Material" id=3]
 [ext_resource path="res://materials/Clouds.tres" type="Material" id=4]
+[ext_resource path="res://sound/futuristic_hum.ogg" type="AudioStream" id=5]
 
 [sub_resource type="SphereMesh" id=1]
 
@@ -39,3 +40,8 @@ material/0 = ExtResource( 3 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 5 )
+
+[node name="Hum" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 5 )
+attenuation_model = 1
+doppler_tracking = 2

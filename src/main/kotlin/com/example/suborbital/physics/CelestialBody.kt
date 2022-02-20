@@ -3,12 +3,14 @@ package com.example.suborbital.physics
 import com.example.suborbital.Vector3
 import com.example.suborbital.Highlightable
 import godot.Area
+import godot.AudioStreamPlayer3D
 import godot.MeshInstance
 import godot.annotation.Export
 import godot.annotation.RegisterClass
 import godot.annotation.RegisterFunction
 import godot.annotation.RegisterProperty
 import godot.extensions.getNodeAs
+import kotlin.math.log10
 import kotlin.math.pow
 
 /*
@@ -35,6 +37,7 @@ class CelestialBody : Area, Highlightable {
 	var velocity = Vector3.ZERO
 	var angularVelocity = Vector3.ZERO
 
+	val hum by lazy { getNodeAs<AudioStreamPlayer3D>("Hum")!! }
 	override val meshInstance by lazy { getNodeAs<MeshInstance>("Surface")!! }
 	override var outlineMeshInstance: MeshInstance? = null
 	override var highlightCounter: Int = 0
@@ -65,7 +68,20 @@ class CelestialBody : Area, Highlightable {
 	}
 
 	@RegisterFunction
-	override fun _process(delta: Double) {
+	override fun _physicsProcess(delta: Double) {
 		translation = (position * (space?.spaceScale ?: 1.0)).toGodot()
+
+		// Sound effects
+		val speedFactor = (log10(velocity.length) / 6).coerceAtMost(1.0)
+		val massFactor = (log10(mass) / 30).coerceAtMost(1.0)
+		if(velocity.length > 0.05) {
+			if(!hum.playing) {
+				hum.play(0.0)
+			}
+			hum.unitDb = -100 + 100 * speedFactor * massFactor
+			hum.pitchScale = 2 - 1.5 * massFactor
+		} else if(hum.playing) {
+			hum.stop()
+		}
 	}
 }
