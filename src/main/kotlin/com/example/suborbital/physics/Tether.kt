@@ -10,11 +10,11 @@ import kotlin.random.Random
 
 class Tether(
 	var point: Vector3,
-	val body: CelestialBody,
+	val body: MassBody,
 	val stiffness: Double, // Newtons per meter
 	val damping: Double, // Newtons per meter per second
 ) : Spatial(), ForceField {
-	val spaceScale get() = body.space?.spaceScale ?: 1.0
+	val spaceScale get() = body.space.spaceScale
 	val restLength = (point - body.position).length
 	var oldExpansion = 0.0
 
@@ -22,7 +22,7 @@ class Tether(
 		(GD.load<PackedScene>("res://objects/Tether.tscn")!!.instance() as Spatial)
 			.also {
 				addChild(it)
-				body.space?.addChild(this)
+				body.space.addChild(this)
 			}
 	}
 	val meshInstance by lazy {

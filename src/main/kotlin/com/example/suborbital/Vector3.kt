@@ -1,14 +1,13 @@
-/*
-A replacement of Godot's native Vector3 class.
-Godot's Vector3 class uses Floats, and generally we cannot be sure of behaviour at extreme values. This replacement
-class uses Double, implements any useful math, and allows easy conversion to and from Godot's native type.
- */
-
 package com.example.suborbital
 
 import kotlin.math.sqrt
 import kotlin.math.pow
 
+/*
+A replacement of Godot's native Vector3 class.
+Godot's Vector3 class uses Floats, and generally we cannot be sure of behaviour at extreme values. This replacement
+class uses Double, implements any useful math, and allows easy conversion to and from Godot's native type.
+ */
 data class Vector3(var x: Double, var y: Double, var z: Double) {
     companion object {
         val ZERO = Vector3(0.0, 0.0, 0.0)

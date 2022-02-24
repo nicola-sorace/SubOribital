@@ -30,6 +30,6 @@ class GravitationalField : ForceField {
 		}
     }
 
-	fun CelestialBody.getCircularOrbitVelocity(r: Double) =
+	fun MassBody.getCircularOrbitVelocity(r: Double) =
 		sqrt(gravitationalConstant * mass / r)
 }
